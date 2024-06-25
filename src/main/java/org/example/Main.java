@@ -10,14 +10,38 @@ import org.example.facade.Video;
 import org.example.listChain.AutowireNewChains;
 import org.example.listChain.TesterForChange;
 import org.example.builder.Car;
+import org.example.observer.BasicObservable;
+import org.example.observer.Observer;
+import org.example.observer.ObserverBuilder;
 
 
 import java.io.IOException;
 import java.util.List;
+import java.util.Objects;
 
 public class Main {
     public static void main(String[] args) {
+        observer();
+    }
 
+    public static void observer() {
+        Observer<Boolean> destroyObserver = new Observer<>();
+        Observer<String> observer = new Observer<>();
+
+        new ObserverBuilder<>(observer)
+                .when(Objects::nonNull)
+                .takeUntil(destroyObserver)
+                .subscribe(System.out::println)
+                .build();
+
+        observer.next(null);
+        observer.next("Hello");
+        observer.next(null);
+        observer.next("World");
+        observer.next(null);
+        destroyObserver.next(true);
+        observer.next("Hello");
+        observer.next("World");
     }
 
     public static void facade() {
